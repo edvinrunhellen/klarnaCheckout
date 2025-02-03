@@ -1,6 +1,6 @@
 
 import { getProducts, getProduct } from './services/api.js'
-import {createOrder} from './services/klarna.js'
+import {createOrder, retrieveOrder} from './services/klarna.js'
 import express from "express"
 const app = express();
 import { config } from "dotenv"
@@ -32,8 +32,10 @@ app.get('/product/:id', async function (req, res) {
 });
 
 app.get('/confirmation', async (req, res) => {
-    const markup = `<h1>Hello confirmation</h1>`;
-    res.send(markup);
+    const { order_id } = req.query
+    const klarnaResponse = await retrieveOrder(order_id)
+    const {html_snippet} = klarnaResponse
+    res.send(html_snippet);
 })
 
 
